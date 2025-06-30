@@ -3,22 +3,19 @@ import axios from 'axios';
 
 @Injectable()
 export class WhatsappService {
-  private readonly phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
   private readonly token = process.env.WHATSAPP_TOKEN;
+  private readonly phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  private readonly facebookBaseUrl = process.env.FACEBOOK_BASEURL;
 
-  async sendMessage(to: string, message: string) {
-    const url = `https://graph.facebook.com/v19.0/${this.phoneNumberId}/messages`;
-    const data = {
-      messaging_product: 'whatsapp',
-      to,
-      type: 'text',
-      text: { body: message },
-    };
+  async sendMessage(payload: any) {
+    const url = `${this.facebookBaseUrl}/${this.phoneNumberId}/messages`;
+
     const headers = {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     };
-    const res = await axios.post(url, data, { headers });
+
+    const res = await axios.post(url, payload, { headers });
     return res.data;
   }
 }
